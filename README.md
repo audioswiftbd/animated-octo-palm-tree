@@ -16,7 +16,7 @@ Python:
     python -m http.server 8000
 
 Then open:
-    http://localhost:8000
+    http://audioswift
 
 ## Free hosting
 You can publish this folder using GitHub Pages or Cloudflare Pages:
