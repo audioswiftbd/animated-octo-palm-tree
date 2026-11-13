@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Convert, resize, compress and trim audio files online for free.">
+  <title>AudioSwift — Free Online MP3 Converter</title>
+  <style>
+    :root{--bg:#0b1020;--panel:#121a2e;--panel2:#17223a;--line:#263653;--text:#f4f7ff;--muted:#9eacc7;--accent:#7c6cff;--accent2:#38d6c5;--danger:#ff7c91}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -15%,#263365 0,transparent 48%),var(--bg);color:var(--text);font:15px/1.55 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+    .wrap{max-width:1000px;margin:auto;padding:42px 20px 60px}.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:20px;letter-spacing:-.5px}.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-size:20px}
+    header{text-align:center;padding:46px 0 30px}header .pill{display:inline-block;border:1px solid #38446d;background:#161f3b;color:#c8c5ff;border-radius:30px;padding:6px 12px;font-size:12px;font-weight:700;letter-spacing:.5px}h1{font-size:clamp(34px,6vw,56px);line-height:1.05;letter-spacing:-2px;margin:20px 0 14px}h1 span{background:linear-gradient(90deg,#a99cff,#4ce1d0);background-clip:text;color:transparent}header p{color:var(--muted);max-width:620px;margin:auto;font-size:16px}
+    .app{max-width:760px;margin:0 auto;background:linear-gradient(180deg,#151f36,#10182a);border:1px solid var(--line);border-radius:24px;padding:25px;box-shadow:0 24px 80px #0006}
+    .drop{border:1.5px dashed #52618b;border-radius:18px;padding:34px 18px;text-align:center;background:#0d1528;transition:.2s;cursor:pointer}.drop.drag{border-color:var(--accent2);background:#102a31}.upload-icon{font-size:35px}.drop strong{display:block;font-size:18px;margin:8px 0 3px}.drop small{color:var(--muted)}input[type=file]{display:none}
+    .fileline{display:none;margin-top:14px;padding:12px 14px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;align-items:center;justify-content:space-between;gap:10px}.fileline.show{display:flex}.filemeta{min-width:0}.filename{font-weight:700;overflow-wrap:anywhere}.filesize{font-size:12px;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:22px}.field label{display:block;font-size:13px;font-weight:700;color:#cbd5eb;margin-bottom:7px}.field select,.field input{width:100%;background:#0c1426;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit;outline:none}.field select:focus,.field input:focus{border-color:var(--accent)}
+    .hint{font-size:11px;color:var(--muted);margin-top:5px}.trim{grid-column:1/-1;border-top:1px solid var(--line);padding-top:16px}.trimrow{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .actions{display:flex;gap:10px;margin-top:22px}.btn{border:0;border-radius:12px;padding:13px 18px;font:inherit;font-weight:800;cursor:pointer}.primary{flex:1;color:white;background:linear-gradient(90deg,#7867ff,#4a9eff);box-shadow:0 8px 24px #635bff38}.primary:disabled{opacity:.5;cursor:not-allowed}.secondary{background:#202c45;color:#dce5f7}
+    .status{display:none;margin-top:18px;padding:13px 14px;border-radius:12px;background:#0c1426;border:1px solid var(--line);color:#dce5f7}.status.show{display:block}.bar{height:7px;background:#25324b;border-radius:9px;overflow:hidden;margin-top:10px}.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width .2s}.download{display:none;margin-top:14px;text-align:center}.download.show{display:block}.download a{display:inline-block;color:#06121c;background:var(--accent2);text-decoration:none;font-weight:800;padding:12px 20px;border-radius:11px}
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:24px auto 0;max-width:760px}.feature{background:#111a2d;border:1px solid var(--line);border-radius:15px;padding:17px}.feature b{display:block;margin:6px 0}.feature p{margin:0;color:var(--muted);font-size:12px}.feature span{font-size:21px}
+    footer{text-align:center;color:#7f8ba5;font-size:12px;margin-top:30px}.notice{max-width:760px;margin:16px auto 0;color:#9eacc7;font-size:12px;text-align:center}
+    @media(max-width:600px){.wrap{padding:24px 14px}.app{padding:16px}.grid{grid-template-columns:1fr}.trim{grid-column:auto}.features{grid-template-columns:1fr}.actions{flex-direction:column}.trimrow{grid-template-columns:1fr}header{padding:35px 0 24px}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><div class="logo">♫</div> AudioSwift</div>
+  <header>
+    <span class="pill">FREE • FAST • PRIVATE</span>
+    <h1>Convert audio.<br><span>Your way.</span></h1>
+    <p>Convert, compress and trim audio files in your browser. No account, no upload to a server.</p>
+  </header>
+
+  <main class="app">
+    <div class="drop" id="drop">
+      <div class="upload-icon">☁️</div>
+      <strong>Drop your audio file here</strong>
+      <small>or click to browse · MP3, WAV, M4A, OGG, FLAC and more</small>
+      <input id="file" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.flac,.aac,.wma">
+    </div>
+    <div class="fileline" id="fileline">
+      <div class="filemeta"><div class="filename" id="filename"></div><div class="filesize" id="filesize"></div></div>
+      <button class="btn secondary" id="remove" type="button">Remove</button>
+    </div>
+
+    <div class="grid">
+      <div class="field"><label for="format">Convert to</label><select id="format"><option value="mp3">MP3 Audio</option><option value="wav">WAV Audio</option><option value="ogg">OGG Audio</option></select></div>
+      <div class="field"><label for="bitrate">MP3 quality / bitrate</label><select id="bitrate"><option value="320k">320 kbps · Highest</option><option value="256k">256 kbps · Very high</option><option value="192k" selected>192 kbps · Recommended</option><option value="128k">128 kbps · Smaller file</option><option value="96k">96 kbps · Compact</option><option value="64k">64 kbps · Smallest</option></select><div class="hint">Used for MP3 output. Lower bitrate usually means smaller files.</div></div>
+      <div class="field trim"><label>Optional trim (leave blank to convert the full file)</label><div class="trimrow"><div><input id="start" type="number" min="0" step="0.1" placeholder="Start time in seconds"></div><div><input id="end" type="number" min="0" step="0.1" placeholder="End time in seconds"></div></div><div class="hint">Example: start 5 and end 25 exports the section from 5 to 25 seconds.</div></div>
+    </div>
+    <div class="actions"><button class="btn primary" id="convert" disabled>Choose an audio file first</button><button class="btn secondary" id="reset" type="button">Reset options</button></div>
+    <div class="status" id="status" role="status" aria-live="polite"><div id="statusText">Preparing…</div><div class="bar"><i id="progress"></i></div></div>
+    <div class="download" id="download"></div>
+  </main>
+
+  <section class="features">
+    <div class="feature"><span>⚡</span><b>Fast conversion</b><p>Runs locally in your browser using FFmpeg WebAssembly.</p></div>
+    <div class="feature"><span>🗜️</span><b>Reduce file size</b><p>Choose a lower MP3 bitrate to create a smaller audio file.</p></div>
+    <div class="feature"><span>🔒</span><b>Private by design</b><p>Your selected audio is processed on your device, not uploaded to this site.</p></div>
+  </section>
+  <p class="notice">Large files and older devices may take longer. Keep this browser tab open until conversion finishes. This demo loads the FFmpeg engine from a public CDN.</p>
+  <footer>© 2026 AudioSwift · Free online audio tools</footer>
+</div>
+
+<script type="module">
+  import { FFmpeg } from 'https://cdn.jsdelivr.net/npm/@ffmpeg/ffmpeg@0.12.15/dist/esm/index.js';
+  import { toBlobURL } from 'https://cdn.jsdelivr.net/npm/@ffmpeg/util@0.12.2/dist/esm/index.js';
+
+  const $ = id => document.getElementById(id);
+  const fileInput=$('file'), drop=$('drop'), convertBtn=$('convert');
+  let selected=null, ffmpeg=null, busy=false, outputUrl=null;
+
+  function sizeText(bytes){if(bytes<1024*1024)return (bytes/1024).toFixed(1)+' KB';return (bytes/1024/1024).toFixed(2)+' MB'}
+  function setStatus(message, percent=null){$('status').classList.add('show');$('statusText').textContent=message;if(percent!==null)$('progress').style.width=percent+'%'}
+  function clearDownload(){if(outputUrl)URL.revokeObjectURL(outputUrl);outputUrl=null;$('download').classList.remove('show');$('download').innerHTML=''}
+  function choose(file){if(!file)return;if(!file.type.startsWith('audio/')&&!/\.(mp3|wav|m4a|ogg|flac|aac|wma)$/i.test(file.name)){alert('Please choose a supported audio file.');return}
+    selected=file;$('filename').textContent=file.name;$('filesize').textContent=sizeText(file.size);$('fileline').classList.add('show');convertBtn.disabled=false;convertBtn.textContent='Convert audio';$('status').classList.remove('show');clearDownload()}
+  function reset(){selected=null;fileInput.value='';$('fileline').classList.remove('show');convertBtn.disabled=true;convertBtn.textContent='Choose an audio file first';$('start').value='';$('end').value='';$('format').value='mp3';$('bitrate').value='192k';$('status').classList.remove('show');clearDownload()}
+  drop.addEventListener('click',()=>fileInput.click());
+  fileInput.addEventListener('change',e=>choose(e.target.files[0]));
+  $('remove').addEventListener('click',reset);$('reset').addEventListener('click',()=>{$('start').value='';$('end').value='';$('format').value='mp3';$('bitrate').value='192k'});
+  for(const ev of ['dragenter','dragover'])drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag')});
+  for(const ev of ['dragleave','drop'])drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.remove('drag')});
+  drop.addEventListener('drop',e=>choose(e.dataTransfer.files[0]));
+
+  async function getEngine(){
+    if(ffmpeg?.loaded)return ffmpeg;
+    ffmpeg=new FFmpeg();
+    ffmpeg.on('progress',({progress})=>{if(busy)setStatus('Converting your audio…',Math.max(2,Math.min(99,Math.round(progress*100))))});
+    setStatus('Loading conversion engine…',3);
+    const base='https://cdn.jsdelivr.net/npm/@ffmpeg/core@0.12.10/dist/umd';
+    await ffmpeg.load({coreURL:await toBlobURL(base+'/ffmpeg-core.js','text/javascript'),wasmURL:await toBlobURL(base+'/ffmpeg-core.wasm','application/wasm')});
+    return ffmpeg;
+  }
+  convertBtn.addEventListener('click',async()=>{
+    if(!selected||busy)return;
+    busy=true;convertBtn.disabled=true;clearDownload();
+    let inName='input'+(selected.name.match(/\.[^.]+$/)?.[0]||'.audio').toLowerCase();
+    const format=$('format').value, bitrate=$('bitrate').value;
+    const outName='audioswift-output.'+format;
+    const start=$('start').value.trim(), end=$('end').value.trim();
+    if((start!==''&&Number(start)<0)||(end!==''&&Number(end)<=0)||(start!==''&&end!==''&&Number(end)<=Number(start))){
+      setStatus('Please enter a valid trim range.');busy=false;convertBtn.disabled=false;return;
+    }
+    try{
+      const engine=await getEngine();
+      setStatus('Reading file…',8);
+      await engine.writeFile(inName,new Uint8Array(await selected.arrayBuffer()));
+      const args=['-i',inName];
+      if(start!=='')args.push('-ss',start);
+      if(end!==''){const duration=Number(end)-(start===''?0:Number(start));args.push('-t',String(duration))}
+      if(format==='mp3')args.push('-codec:a','libmp3lame','-b:a',bitrate);
+      else if(format==='ogg')args.push('-codec:a','libvorbis','-q:a','5');
+      else args.push('-codec:a','pcm_s16le');
+      args.push('-y',outName);
+      setStatus('Converting your audio…',12);
+      await engine.exec(args);
+      const data=await engine.readFile(outName);
+      const mime=format==='mp3'?'audio/mpeg':format==='wav'?'audio/wav':'audio/ogg';
+      outputUrl=URL.createObjectURL(new Blob([data.buffer],{type:mime}));
+      const a=document.createElement('a');a.href=outputUrl;a.download=outName;a.textContent='⬇ Download '+outName;
+      $('download').innerHTML='';$('download').appendChild(a);$('download').classList.add('show');
+      setStatus('Done! Your converted file is ready.',100);
+      await engine.deleteFile(inName);await engine.deleteFile(outName);
+    }catch(err){console.error(err);setStatus('Conversion failed. Try a smaller file or a different output format. If this is your first use, check your internet connection so the engine can load.')}
+    finally{busy=false;convertBtn.disabled=!selected;convertBtn.textContent='Convert audio'}
+  });
+</script>
+</body>
+</html>
